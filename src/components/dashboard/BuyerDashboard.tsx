@@ -1,14 +1,7 @@
 import React from 'react';
 import { 
   ShoppingBag, 
-  Search, 
-  MapPin, 
-  Star, 
-  ShieldCheck, 
-  ArrowRight, 
-  Package, 
   TrendingUp, 
-  Clock, 
   Heart,
   Eye
 } from 'lucide-react';

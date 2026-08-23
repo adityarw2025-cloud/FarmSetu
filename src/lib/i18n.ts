@@ -26,6 +26,7 @@ export interface Translations {
   viewDetails: string;
   rentMachine: string;
   viewProduce: string;
+  viewProduct: string;
   buyNow: string;
 
   // Features & Pillars
@@ -197,6 +198,7 @@ export const translations: Record<Language, Translations> = {
     viewDetails: 'विवरण देखें',
     rentMachine: 'मशीन किराए पर लें',
     viewProduce: 'फसल देखें',
+    viewProduct: 'उत्पाद देखें',
     buyNow: 'फसल खरीदें',
 
     aiQualityRadar: 'एआई गुणवत्ता राडार',
@@ -278,6 +280,7 @@ export const translations: Record<Language, Translations> = {
     viewDetails: 'सविस्तर पहा',
     rentMachine: 'यंत्र भाड्याने घ्या',
     viewProduce: 'माल पहा',
+    viewProduct: 'उत्पादन पहा',
     buyNow: 'माल खरेदी करा',
 
     aiQualityRadar: 'एआय गुणवत्ता तपासणी',

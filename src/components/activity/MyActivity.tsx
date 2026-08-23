@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Package, ShoppingBag, Tractor, TrendingUp, CheckCircle2, Clock } from 'lucide-react';
 import type { Order, RentalRequest, UserProfile } from '../../types';
 import { StatusBadge } from '../common/StatusBadge';
 

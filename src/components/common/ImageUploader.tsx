@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Camera, Image as ImageIcon, Trash2, RefreshCw, AlertCircle, CheckCircle2, Loader2 } from 'lucide-react';
+import { Camera, Trash2, RefreshCw, AlertCircle, CheckCircle2, Loader2 } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '../../lib/supabase';
 
 interface ImageUploaderProps {

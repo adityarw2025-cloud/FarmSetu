@@ -1,21 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Search, 
-  Filter, 
   ShieldCheck, 
   MapPin, 
   Star, 
   Tractor, 
   Sprout, 
-  Eye, 
-  Calendar,
-  Tag
+  Eye
 } from 'lucide-react';
 import type { Product, Equipment, UserProfile } from '../../types';
 import { StatusBadge } from '../common/StatusBadge';
 import { ProductDetailModal } from './ProductDetailModal';
 import { i18n } from '../../lib/i18n';
-import { formatDate, cleanLocation, formatPrice, formatQuantity } from '../../utils/formatters';
+import { cleanLocation, formatPrice, formatQuantity } from '../../utils/formatters';
 
 interface MarketplaceProps {
   products: Product[];

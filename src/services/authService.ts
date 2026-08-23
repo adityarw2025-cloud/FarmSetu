@@ -55,14 +55,20 @@ class AuthService {
       if (savedSession) {
         this.currentUser = JSON.parse(savedSession);
       } else {
-        this.currentUser = null;
+        this.currentUser = seedUsers[0];
       }
     } catch (e) {
-      console.error('Failed to initialize AuthService:', e);
-      this.currentUser = null;
+      console.error('Failed to parse auth state', e);
+      this.currentUser = seedUsers[0];
     }
     this.isLoaded = true;
+  }
 
+  public isAuthLoaded(): boolean {
+    return this.isLoaded;
+  }
+
+  public setupSupabaseListeners() {
     // Listen to Supabase Live OAuth State Changes (e.g. returning from Google OAuth redirect)
     if (isSupabaseConfigured && supabase) {
       supabase.auth.onAuthStateChange((_event, session) => {
@@ -251,14 +257,15 @@ class AuthService {
     );
 
     if (!user) {
+      const targetEmail = query.includes('@') ? query : `${query}@farmsetu.com`;
       const dynamicUser: UserProfile = {
         id: `usr_${Date.now()}`,
-        name: email.split('@')[0].replace('.', ' '),
-        email: email,
-        role: email.includes('buyer') ? 'Buyer' : 'Farmer',
+        name: targetEmail.split('@')[0].replace('.', ' '),
+        email: targetEmail,
+        role: targetEmail.includes('buyer') ? 'Buyer' : 'Farmer',
         phone: '+91 98765 00000',
         location: 'Nashik, Maharashtra',
-        farmSize: email.includes('buyer') ? 'N/A' : '12 Acres',
+        farmSize: targetEmail.includes('buyer') ? 'N/A' : '12 Acres',
         crops: ['Tomatoes', 'Wheat'],
         isVerified: true,
         avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=400&q=80',

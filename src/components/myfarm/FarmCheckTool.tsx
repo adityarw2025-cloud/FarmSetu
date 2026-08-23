@@ -1,13 +1,7 @@
 import React, { useState } from 'react';
 import { 
   ShieldCheck, 
-  CheckCircle2, 
   Play, 
-  RotateCcw, 
-  Award, 
-  Scale, 
-  Maximize2, 
-  Palette, 
   Sparkles
 } from 'lucide-react';
 import type { Product, FarmCheckReport } from '../../types';

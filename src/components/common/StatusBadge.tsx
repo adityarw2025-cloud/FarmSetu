@@ -5,7 +5,7 @@ interface StatusBadgeProps {
   type?: 'general' | 'grade' | 'availability';
 }
 
-export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, type = 'general' }) => {
+export const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
   let bg = '#F1F5F9';
   let color = '#475569';
   let border = '#E2E8F0';

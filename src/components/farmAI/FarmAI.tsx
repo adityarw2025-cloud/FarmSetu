@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Bot, Send, Sparkles, User, RefreshCw, HelpCircle } from 'lucide-react';
+import { Bot, Send, User, RefreshCw, HelpCircle } from 'lucide-react';
 import type { AIChatMessage } from '../../types';
 import { getFarmAIResponse } from '../../services/aiService';
 

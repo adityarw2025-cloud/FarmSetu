@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import { 
   Sprout, 
-  Mail, 
   Lock, 
-  Phone, 
-  MapPin, 
   ArrowRight, 
   ShieldCheck, 
   AlertCircle,
@@ -362,7 +359,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                         width: '100%', 
                         borderRadius: '12px', 
                         padding: '12px', 
-                        justify: 'center',
+                        justifyContent: 'center',
                         background: 'white',
                         color: '#1E293B',
                         border: '1px solid #CBD5E1',
@@ -553,7 +550,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   width: '100%', 
                   borderRadius: '12px', 
                   padding: '12px', 
-                  justify: 'center',
+                  justifyContent: 'center',
                   background: 'white',
                   color: '#1E293B',
                   border: '1px solid #CBD5E1',

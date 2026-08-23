@@ -5,11 +5,8 @@ import {
   Trash2, 
   ShieldCheck, 
   Package, 
-  TrendingUp, 
   Sprout, 
-  AlertTriangle,
-  RefreshCw,
-  CheckCircle2
+  AlertTriangle
 } from 'lucide-react';
 import type { Product, ProduceCategory, UserProfile } from '../../types';
 import { Modal } from '../common/Modal';

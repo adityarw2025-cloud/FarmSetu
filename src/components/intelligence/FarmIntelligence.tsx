@@ -3,8 +3,7 @@ import {
   CloudRain, 
   Droplets, 
   TrendingUp, 
-  Sprout,
-  Sun
+  Sprout
 } from 'lucide-react';
 import type { UserProfile } from '../../types';
 import { WeatherWidget } from './WeatherWidget';

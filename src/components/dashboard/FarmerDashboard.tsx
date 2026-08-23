@@ -2,16 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { 
   PlusCircle, 
   Sprout, 
-  ShoppingBag, 
   Tractor, 
-  Bot, 
-  User, 
   TrendingUp, 
   Package, 
   MessageSquare, 
   Eye,
-  ArrowRight,
-  ShieldCheck,
   Plus
 } from 'lucide-react';
 import type { Product, Order, UserProfile } from '../../types';

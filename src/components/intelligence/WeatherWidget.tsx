@@ -9,9 +9,6 @@ import {
   Navigation, 
   Search, 
   AlertCircle,
-  Sun,
-  Cloud,
-  CheckCircle2,
   Calendar
 } from 'lucide-react';
 import { fetchRealWeatherData, getWeatherEmoji, extractCityName } from '../../services/weatherService';
@@ -83,7 +80,7 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({ currentUser }) => 
       (pos) => {
         loadWeather({ lat: pos.coords.latitude, lon: pos.coords.longitude });
       },
-      (err) => {
+      (_err) => {
         setLoading(false);
         setError('Location access was denied or unavailable. Please select or search a city manually.');
       },
