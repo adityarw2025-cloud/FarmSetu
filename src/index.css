@@ -1,0 +1,60 @@
+:root {
+  --color-canopy: #1B4332;
+  --color-canopy-dark: #0F2419;
+  --color-sprout: #4F8B5B;
+  --color-turmeric: #E0A72E;
+  --color-turmeric-text: #412402;
+  --color-terracotta: #B5533C;
+  --color-rice-paper: #FAF6EC;
+  --color-sand: #F0EAD8;
+  --color-ink: #1F2420;
+  --color-ink-muted: #5F5E5A;
+
+  --font-display: 'Zilla Slab', Georgia, serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+
+  font: 16px/150% var(--font-body);
+  letter-spacing: -0.01em;
+  color-scheme: light;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  background-color: var(--color-rice-paper);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  background-color: var(--color-rice-paper);
+  color: var(--color-ink);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+  color: var(--color-ink);
+}
+
+p {
+  margin: 0;
+  font-family: var(--font-body);
+}
+
+.num-mono, .stat-mono, .price-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
