@@ -55,11 +55,11 @@ class AuthService {
       if (savedSession) {
         this.currentUser = JSON.parse(savedSession);
       } else {
-        this.currentUser = seedUsers[0];
+        this.currentUser = null;
       }
     } catch (e) {
       console.error('Failed to parse auth state', e);
-      this.currentUser = seedUsers[0];
+      this.currentUser = null;
     }
     this.isLoaded = true;
   }
