@@ -29,6 +29,7 @@ import type { Product, Equipment, FarmCheckReport, UserProfile } from './types';
 export function App() {
   // Auth Session State
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(authService.getCurrentUser());
+  const [isAuthInitializing, setIsAuthInitializing] = useState<boolean>(authService.isAuthInitializing());
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authModalMode, setAuthModalMode] = useState<'login' | 'signup'>('login');
 
@@ -58,17 +59,33 @@ export function App() {
       setOrders(store.getOrders());
     });
 
-    // Subscribe to Auth updates
-    const unsubscribeAuth = authService.subscribe(() => {
+    // Subscribe to Auth updates & handles Supabase OAuth callbacks dynamically
+    const unsubscribeAuth = authService.subscribe((event?: string) => {
       const user = authService.getCurrentUser();
+      const initializing = authService.isAuthInitializing();
+      
       setCurrentUser(user);
+      setIsAuthInitializing(initializing);
+
+      if (user) {
+        setIsAuthModalOpen(false);
+        if (event === 'SIGNED_IN' || (activeTab === 'landing' && !initializing)) {
+          setActiveTab('home');
+          showToast('success', 'Authenticated Successfully', `Welcome back, ${user.name}`);
+          
+          // Clean OAuth URL fragments/tokens from browser location bar
+          if (window.location.hash || window.location.search.includes('code=')) {
+            window.history.replaceState(null, '', window.location.pathname);
+          }
+        }
+      }
     });
 
     return () => {
       unsubscribeStore();
       unsubscribeAuth();
     };
-  }, []);
+  }, [activeTab]);
 
   const showToast = (type: ToastMessage['type'], title: string, text?: string) => {
     setToast({ id: `${Date.now()}`, type, title, text });
@@ -177,6 +194,38 @@ export function App() {
   const handleOpenQRReport = (reportId: string) => {
     setVerifyReportId(reportId);
   };
+
+  // Render Auth Loading Screen while Supabase verifies OAuth callback / restored session
+  if (isAuthInitializing) {
+    return (
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '100vh',
+        background: 'var(--color-canopy)',
+        color: 'var(--color-rice-paper)',
+        fontFamily: 'var(--font-body)'
+      }}>
+        <div style={{
+          width: '48px',
+          height: '48px',
+          borderRadius: '50%',
+          border: '4px solid rgba(255, 255, 255, 0.2)',
+          borderTopColor: 'var(--color-turmeric)',
+          animation: 'spin 0.8s linear infinite',
+          marginBottom: '16px'
+        }} />
+        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.35rem', fontWeight: 700, color: 'var(--color-rice-paper)' }}>
+          Connecting to FarmSetu...
+        </h2>
+        <p style={{ fontSize: '0.85rem', opacity: 0.8, marginTop: '4px', color: '#D2E5DA' }}>
+          Verifying security session
+        </p>
+      </div>
+    );
+  }
 
   // If public landing page selected
   if (activeTab === 'landing') {

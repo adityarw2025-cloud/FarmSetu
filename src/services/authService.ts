@@ -33,20 +33,21 @@ const seedUsers: UserProfile[] = [
   }
 ];
 
-type AuthListener = () => void;
+type AuthListener = (event?: string) => void;
 
 class AuthService {
   private currentUser: UserProfile | null = null;
   private usersDb: UserProfile[] = [];
   private listeners: Set<AuthListener> = new Set();
   private isLoaded: boolean = false;
+  private isInitializing: boolean = true;
   private pendingOtp: { phone: string; code: string; role: 'Farmer' | 'Buyer'; name?: string } | null = null;
 
   constructor() {
     this.init();
   }
 
-  private init() {
+  private async init() {
     try {
       const savedDb = localStorage.getItem(USERS_DB_KEY);
       this.usersDb = savedDb ? JSON.parse(savedDb) : seedUsers;
@@ -62,19 +63,17 @@ class AuthService {
       this.currentUser = null;
     }
     this.isLoaded = true;
-  }
 
-  public isAuthLoaded(): boolean {
-    return this.isLoaded;
-  }
+    // 1. Register Supabase OAuth & Auth State Change Listener
+    this.setupSupabaseListeners();
 
-  public setupSupabaseListeners() {
-    // Listen to Supabase Live OAuth State Changes (e.g. returning from Google OAuth redirect)
+    // 2. Perform Async Supabase Session Restoration (handles OAuth redirect token fragments & code exchange)
     if (isSupabaseConfigured && supabase) {
-      supabase.auth.onAuthStateChange((_event, session) => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
         if (session?.user) {
           const email = session.user.email || '';
-          const name = session.user.user_metadata?.full_name || session.user.user_metadata?.name || email.split('@')[0];
+          const name = session.user.user_metadata?.full_name || session.user.user_metadata?.name || (email ? email.split('@')[0] : 'Kisan User');
           const avatar = session.user.user_metadata?.avatar_url || session.user.user_metadata?.picture || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80';
 
           const googleUser: UserProfile = {
@@ -93,7 +92,58 @@ class AuthService {
 
           this.currentUser = googleUser;
           localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(this.currentUser));
-          this.notify();
+          this.isInitializing = false;
+          this.notify('SIGNED_IN');
+          return;
+        }
+      } catch (err) {
+        console.warn('Supabase getSession initialization warning:', err);
+      }
+    }
+
+    this.isInitializing = false;
+    this.notify('INITIALIZED');
+  }
+
+  public isAuthLoaded(): boolean {
+    return this.isLoaded;
+  }
+
+  public isAuthInitializing(): boolean {
+    return this.isInitializing;
+  }
+
+  public setupSupabaseListeners() {
+    if (isSupabaseConfigured && supabase) {
+      supabase.auth.onAuthStateChange((event, session) => {
+        if (session?.user && (event === 'SIGNED_IN' || event === 'INITIAL_SESSION' || event === 'TOKEN_REFRESHED')) {
+          const email = session.user.email || '';
+          const name = session.user.user_metadata?.full_name || session.user.user_metadata?.name || (email ? email.split('@')[0] : 'Kisan User');
+          const avatar = session.user.user_metadata?.avatar_url || session.user.user_metadata?.picture || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80';
+
+          const googleUser: UserProfile = {
+            id: session.user.id,
+            name: name,
+            email: email,
+            role: 'Farmer',
+            phone: session.user.phone || '+91 98765 43210',
+            location: 'Nashik, Maharashtra',
+            farmSize: '15 Acres',
+            crops: ['Tomatoes', 'Vegetables'],
+            isVerified: true,
+            avatar: avatar,
+            joinedDate: new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+          };
+
+          this.currentUser = googleUser;
+          localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(this.currentUser));
+          this.isInitializing = false;
+          this.notify('SIGNED_IN');
+        } else if (event === 'SIGNED_OUT') {
+          this.currentUser = null;
+          localStorage.removeItem(AUTH_STORAGE_KEY);
+          this.isInitializing = false;
+          this.notify('SIGNED_OUT');
         }
       });
     }
@@ -106,8 +156,8 @@ class AuthService {
     };
   }
 
-  private notify() {
-    this.listeners.forEach((fn) => fn());
+  private notify(event?: string) {
+    this.listeners.forEach((fn) => fn(event));
   }
 
   public getCurrentUser(): UserProfile | null {
