@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 
 interface ModalProps {
@@ -20,54 +21,64 @@ export const Modal: React.FC<ModalProps> = ({
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
+
     if (isOpen) {
+      const originalOverflow = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
       window.addEventListener('keydown', handleKeyDown);
+
+      return () => {
+        document.body.style.overflow = originalOverflow;
+        window.removeEventListener('keydown', handleKeyDown);
+      };
     }
-    return () => {
-      document.body.style.overflow = 'unset';
-      window.removeEventListener('keydown', handleKeyDown);
-    };
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
-  return (
+  const modalContent = (
     <div 
       style={{
         position: 'fixed',
-        inset: 0,
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        width: '100vw',
+        height: '100vh',
         background: 'rgba(15, 23, 42, 0.75)',
         backdropFilter: 'blur(6px)',
-        zIndex: 1000,
+        WebkitBackdropFilter: 'blur(6px)',
+        zIndex: 99999,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         padding: '16px 12px',
-        overflowY: 'auto'
+        boxSizing: 'border-box'
       }} 
       onClick={onClose}
     >
       <div 
-        className="animate-fade-in"
         style={{
           background: 'var(--surface)',
           borderRadius: 'var(--radius-xl)',
           width: '100%',
           maxWidth,
-          maxHeight: 'calc(100vh - 40px)',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.35)',
+          maxHeight: 'calc(100vh - 32px)',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.4)',
           border: '1px solid var(--surface-border)',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
-          margin: 'auto 0'
+          position: 'relative',
+          margin: 'auto',
+          animation: 'modalFadeIn 0.2s ease-out'
         }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Fixed Header */}
         <div style={{
-          padding: '12px 18px',
+          padding: '14px 18px',
           borderBottom: '1px solid var(--surface-border)',
           display: 'flex',
           alignItems: 'center',
@@ -75,7 +86,7 @@ export const Modal: React.FC<ModalProps> = ({
           background: 'var(--surface)',
           flexShrink: 0
         }}>
-          <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text-main)', margin: 0, lineHeight: 1.3 }}>
+          <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-main)', margin: 0, lineHeight: 1.3 }}>
             {title}
           </h3>
           <button 
@@ -88,7 +99,9 @@ export const Modal: React.FC<ModalProps> = ({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              border: 'none',
+              outline: 'none'
             }}
             title="Close dialog"
           >
@@ -100,11 +113,14 @@ export const Modal: React.FC<ModalProps> = ({
         <div style={{ 
           padding: '16px 18px', 
           overflowY: 'auto', 
-          flex: '1 1 auto'
+          flex: '1 1 auto',
+          WebkitOverflowScrolling: 'touch'
         }}>
           {children}
         </div>
       </div>
     </div>
   );
+
+  return createPortal(modalContent, document.body);
 };
