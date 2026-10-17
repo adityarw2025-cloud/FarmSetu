@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, ShoppingBag, Sprout, Tractor, Bot, X, ShieldCheck, Activity, Package, User, LogOut, LogIn } from 'lucide-react';
+import { Home, ShoppingBag, Sprout, Tractor, Bot, X, ShieldCheck, Activity, Package, User, LogOut, LogIn, Camera } from 'lucide-react';
 import { LanguageSelector } from './LanguageSelector';
 import type { NavTab } from './Sidebar';
 import type { UserProfile } from '../../types';
@@ -12,6 +12,7 @@ interface MobileNavProps {
   currentUser: UserProfile | null;
   onOpenAuth: (mode?: 'login' | 'signup') => void;
   onLogout: () => void;
+  onOpenCropScanner?: () => void;
 }
 
 export const MobileNav: React.FC<MobileNavProps> = ({ 
@@ -21,31 +22,32 @@ export const MobileNav: React.FC<MobileNavProps> = ({
   onClose,
   currentUser,
   onOpenAuth,
-  onLogout 
+  onLogout,
+  onOpenCropScanner
 }) => {
   return (
     <>
-      {/* Bottom Sticky Mobile Navigation Bar */}
+      {/* Bottom Sticky Mobile Navigation Bar with Middle Camera Button */}
       <div className="lg:hidden" style={{
         position: 'fixed',
         bottom: 0,
         left: 0,
         right: 0,
-        background: 'rgba(255, 255, 255, 0.95)',
-        backdropFilter: 'blur(12px)',
+        background: 'rgba(255, 255, 255, 0.96)',
+        backdropFilter: 'blur(16px)',
         borderTop: '1px solid var(--surface-border)',
         display: 'flex',
         justifyContent: 'space-around',
-        alignItems: 'center',
-        padding: '8px 0',
+        alignItems: 'flex-end',
+        padding: '6px 4px 6px 4px',
         zIndex: 45,
-        boxShadow: '0 -4px 12px rgba(0,0,0,0.05)'
+        boxShadow: '0 -4px 16px rgba(0,0,0,0.06)'
       }}>
         <button 
           onClick={() => setActiveTab('home')}
           style={bottomTabStyle(activeTab === 'home')}
         >
-          <Home size={20} />
+          <Home size={19} />
           <span>Home</span>
         </button>
 
@@ -53,31 +55,68 @@ export const MobileNav: React.FC<MobileNavProps> = ({
           onClick={() => setActiveTab('marketplace')}
           style={bottomTabStyle(activeTab === 'marketplace')}
         >
-          <ShoppingBag size={20} />
+          <ShoppingBag size={19} />
           <span>Market</span>
+        </button>
+
+        {/* Center Floating Camera Scanner Action Button */}
+        <button 
+          onClick={() => {
+            if (onOpenCropScanner) onOpenCropScanner();
+          }}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: 0,
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            transform: 'translateY(-10px)',
+            zIndex: 50
+          }}
+          aria-label="Scan Crop Disease (CropCare AI)"
+        >
+          <div style={{
+            width: '54px',
+            height: '54px',
+            borderRadius: '50%',
+            background: 'linear-gradient(135deg, #1B4332 0%, #2D6A4F 60%, #E0A72E 100%)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: '0 6px 18px rgba(27, 67, 50, 0.38), 0 0 0 4px #FAF6EC',
+            transition: 'transform 0.15s ease',
+            color: '#FAF6EC'
+          }}>
+            <Camera size={25} color="#FAF6EC" />
+          </div>
+          <span style={{
+            fontSize: '0.62rem',
+            fontFamily: 'var(--font-body)',
+            fontWeight: 800,
+            color: 'var(--color-canopy)',
+            marginTop: '3px',
+            letterSpacing: '-0.01em'
+          }}>
+            CropCare
+          </span>
         </button>
 
         <button 
           onClick={() => setActiveTab('myfarm')}
           style={bottomTabStyle(['myfarm', 'farmcheck', 'intelligence'].includes(activeTab))}
         >
-          <Sprout size={20} />
+          <Sprout size={19} />
           <span>My Farm</span>
-        </button>
-
-        <button 
-          onClick={() => setActiveTab('equipment')}
-          style={bottomTabStyle(['equipment', 'my-equipment', 'rentals'].includes(activeTab))}
-        >
-          <Tractor size={20} />
-          <span>Equipment</span>
         </button>
 
         <button 
           onClick={() => setActiveTab('farmAI')}
           style={bottomTabStyle(activeTab === 'farmAI')}
         >
-          <Bot size={20} color={activeTab === 'farmAI' ? '#16A34A' : 'currentColor'} />
+          <Bot size={19} color={activeTab === 'farmAI' ? '#16A34A' : 'currentColor'} />
           <span>FarmAI</span>
         </button>
       </div>
@@ -125,6 +164,32 @@ export const MobileNav: React.FC<MobileNavProps> = ({
               </button>
               <button onClick={() => { setActiveTab('myfarm'); onClose(); }} style={drawerItemStyle(activeTab === 'myfarm')}>
                 <Sprout size={18} /> My Products
+              </button>
+              <button 
+                onClick={() => { 
+                  onClose(); 
+                  if (onOpenCropScanner) onOpenCropScanner(); 
+                }} 
+                style={{
+                  ...drawerItemStyle(false),
+                  background: 'linear-gradient(90deg, rgba(27,67,50,0.08), rgba(224,167,46,0.12))',
+                  border: '1px solid rgba(224,167,46,0.3)',
+                  color: 'var(--color-canopy)'
+                }}
+              >
+                <Camera size={18} color="#E0A72E" />
+                <span style={{ fontWeight: 700 }}>CropCare AI Scanner</span>
+                <span style={{
+                  marginLeft: 'auto',
+                  fontSize: '0.65rem',
+                  fontWeight: 800,
+                  background: '#E0A72E',
+                  color: '#412402',
+                  padding: '2px 6px',
+                  borderRadius: '10px'
+                }}>
+                  AI
+                </span>
               </button>
               <button onClick={() => { setActiveTab('farmcheck'); onClose(); }} style={drawerItemStyle(activeTab === 'farmcheck')}>
                 <ShieldCheck size={18} /> FarmCheck Quality Verification

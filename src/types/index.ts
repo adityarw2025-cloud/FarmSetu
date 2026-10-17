@@ -121,3 +121,19 @@ export interface AIChatMessage {
   text: string;
   timestamp: string;
 }
+
+export interface CropDiseaseDiagnosis {
+  id: string;
+  cropName: string;
+  diseaseName: string;
+  scientificName?: string;
+  confidenceScore: number; // e.g. 94
+  severity: 'Low' | 'Moderate' | 'High' | 'None (Healthy)';
+  symptoms: string[];
+  organicTreatment: string[];
+  chemicalTreatment?: string[];
+  preventiveMeasures: string[];
+  expertAdviceNeeded: boolean;
+  analyzedAt: string;
+  imageUrl: string;
+}

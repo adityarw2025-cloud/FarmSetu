@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, ShieldCheck, LogOut, LogIn, UserPlus } from 'lucide-react';
+import { Menu, ShieldCheck, LogOut, LogIn, UserPlus, Camera } from 'lucide-react';
 import { LanguageSelector } from './LanguageSelector';
 import { i18n } from '../../lib/i18n';
 import type { NavTab } from './Sidebar';
@@ -12,6 +12,7 @@ interface NavbarProps {
   onOpenAuth: (mode?: 'login' | 'signup') => void;
   onLogout: () => void;
   onOpenMobileMenu: () => void;
+  onOpenCropScanner?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -20,7 +21,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   profile,
   onOpenAuth,
   onLogout,
-  onOpenMobileMenu
+  onOpenMobileMenu,
+  onOpenCropScanner
 }) => {
   const [, setLang] = useState(i18n.getLanguage());
 
@@ -91,6 +93,39 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Right Actions */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
+          {/* CropCare AI Scanner Trigger */}
+          <button 
+            onClick={onOpenCropScanner}
+            className="btn"
+            style={{ 
+              borderRadius: '20px', 
+              fontWeight: 700, 
+              background: 'linear-gradient(135deg, #E0A72E 0%, #D49619 100%)', 
+              color: 'var(--color-turmeric-text)',
+              border: 'none',
+              boxShadow: '0 2px 10px rgba(224, 167, 46, 0.35)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '6px 12px',
+              fontSize: '0.8rem'
+            }}
+            title="Scan crop for pests and diseases"
+          >
+            <Camera size={16} />
+            <span className="hidden-mobile">CropCare AI</span>
+            <span style={{
+              fontSize: '0.62rem',
+              fontWeight: 800,
+              padding: '1px 5px',
+              borderRadius: '6px',
+              background: 'rgba(65, 36, 2, 0.15)',
+              color: '#412402'
+            }}>
+              SCAN
+            </span>
+          </button>
+
           {/* Desktop FarmCheck Direct Trigger */}
           <button 
             onClick={() => setActiveTab('farmcheck')}

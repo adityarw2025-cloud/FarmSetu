@@ -9,6 +9,7 @@ import { Toast } from './components/common/Toast';
 import type { ToastMessage } from './components/common/Toast';
 import { EurekaDemoBar } from './components/common/EurekaDemoBar';
 import { AuthModal } from './components/auth/AuthModal';
+import { CropCareModal } from './components/cropcare/CropCareModal';
 
 // Feature Pages
 import { LandingPage } from './components/landing/LandingPage';
@@ -32,6 +33,7 @@ export function App() {
   const [isAuthInitializing, setIsAuthInitializing] = useState<boolean>(authService.isAuthInitializing());
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authModalMode, setAuthModalMode] = useState<'login' | 'signup'>('login');
+  const [isCropCareModalOpen, setIsCropCareModalOpen] = useState(false);
 
   // Active Tab State (Default to 'landing' for unauthenticated visitors)
   const [activeTab, setActiveTab] = useState<NavTab>(
@@ -283,6 +285,16 @@ export function App() {
         }}
       />
 
+      {/* AI CropCare Disease Scanner Modal */}
+      <CropCareModal 
+        isOpen={isCropCareModalOpen}
+        onClose={() => setIsCropCareModalOpen(false)}
+        onNavigateToFarmAI={(_prompt) => {
+          handleNavigate('farmAI');
+          showToast('info', 'FarmAI Assistant Loaded', 'Crop disease context transferred to FarmAI.');
+        }}
+      />
+
       {/* Desktop Sidebar */}
       <Sidebar 
         activeTab={activeTab} 
@@ -290,6 +302,7 @@ export function App() {
         currentUser={currentUser}
         onLogout={handleLogout}
         onOpenAuth={handleOpenAuth}
+        onOpenCropScanner={() => setIsCropCareModalOpen(true)}
       />
 
       {/* Mobile Drawer Navigation */}
@@ -301,6 +314,7 @@ export function App() {
         currentUser={currentUser}
         onOpenAuth={handleOpenAuth}
         onLogout={handleLogout}
+        onOpenCropScanner={() => setIsCropCareModalOpen(true)}
       />
 
       {/* Main App Content Area */}
@@ -312,6 +326,7 @@ export function App() {
           onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
           onOpenAuth={handleOpenAuth}
           onLogout={handleLogout}
+          onOpenCropScanner={() => setIsCropCareModalOpen(true)}
         />
 
         <main className="page-body">
@@ -324,6 +339,7 @@ export function App() {
                   orders={orders}
                   onNavigate={handleNavigate}
                   onOpenAddProductModal={() => handleNavigate('myfarm')}
+                  onOpenCropScanner={() => setIsCropCareModalOpen(true)}
                 />
               ) : (
                 <BuyerDashboard 

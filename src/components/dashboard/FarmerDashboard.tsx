@@ -7,7 +7,8 @@ import {
   Package, 
   MessageSquare, 
   Eye,
-  Plus
+  Plus,
+  Camera
 } from 'lucide-react';
 import type { Product, Order, UserProfile } from '../../types';
 import type { NavTab } from '../common/Sidebar';
@@ -20,6 +21,7 @@ interface FarmerDashboardProps {
   orders: Order[];
   onNavigate: (tab: NavTab) => void;
   onOpenAddProductModal: () => void;
+  onOpenCropScanner?: () => void;
 }
 
 export const FarmerDashboard: React.FC<FarmerDashboardProps> = ({
@@ -27,7 +29,8 @@ export const FarmerDashboard: React.FC<FarmerDashboardProps> = ({
   products,
   orders,
   onNavigate,
-  onOpenAddProductModal
+  onOpenAddProductModal,
+  onOpenCropScanner
 }) => {
   const [, setLang] = useState(i18n.getLanguage());
 
@@ -72,6 +75,20 @@ export const FarmerDashboard: React.FC<FarmerDashboardProps> = ({
 
         {/* Quick Actions */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+          <button 
+            onClick={onOpenCropScanner}
+            className="btn btn-cta"
+            style={{ 
+              background: 'linear-gradient(135deg, #E0A72E 0%, #D49619 100%)', 
+              color: 'var(--color-turmeric-text)', 
+              borderRadius: '10px', 
+              fontWeight: 800,
+              boxShadow: '0 2px 8px rgba(224, 167, 46, 0.4)'
+            }}
+          >
+            <Camera size={17} />
+            <span>Detect Crop Disease</span>
+          </button>
           <button 
             onClick={onOpenAddProductModal}
             className="btn btn-cta"

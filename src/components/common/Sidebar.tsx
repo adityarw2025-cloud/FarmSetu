@@ -13,7 +13,8 @@ import {
   ChevronRight,
   ShieldCheck,
   LogOut,
-  LogIn
+  LogIn,
+  Camera
 } from 'lucide-react';
 import type { UserProfile } from '../../types';
 import { i18n } from '../../lib/i18n';
@@ -38,6 +39,7 @@ interface SidebarProps {
   currentUser: UserProfile | null;
   onLogout: () => void;
   onOpenAuth: (mode?: 'login' | 'signup') => void;
+  onOpenCropScanner?: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ 
@@ -45,7 +47,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
   setActiveTab, 
   currentUser, 
   onLogout,
-  onOpenAuth 
+  onOpenAuth,
+  onOpenCropScanner
 }) => {
   const [, setLang] = useState(i18n.getLanguage());
 
@@ -128,6 +131,31 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <Sprout size={17} />
             <span>My Products</span>
             {isFarmer && <span style={{ marginLeft: 'auto', fontSize: '0.65rem', color: 'var(--primary)', fontWeight: 800 }}>Farmer</span>}
+          </button>
+
+          <button 
+            onClick={() => {
+              if (onOpenCropScanner) onOpenCropScanner();
+            }}
+            style={{
+              ...subNavStyle(false),
+              background: 'rgba(224, 167, 46, 0.1)',
+              color: 'var(--color-canopy)'
+            }}
+          >
+            <Camera size={17} color="#E0A72E" />
+            <span style={{ fontWeight: 700 }}>CropCare Scanner</span>
+            <span style={{
+              marginLeft: 'auto',
+              fontSize: '0.62rem',
+              fontWeight: 800,
+              padding: '2px 6px',
+              borderRadius: '8px',
+              background: '#E0A72E',
+              color: '#412402'
+            }}>
+              AI
+            </span>
           </button>
 
           <button 
